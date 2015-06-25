@@ -10,6 +10,7 @@ import com.tinkerforge.BrickletLCD20x4;
 import com.tinkerforge.IPConnection;
 import com.tinkerforge.TinkerforgeException;
 import java.io.IOException;
+import org.rapidpm.demo.iot.tinkerforge.devoxxpl.WaitForQ;
 
 /**
  *
@@ -23,20 +24,22 @@ public class LcdDemo {
     private static final String AMBIENT_UID = "mav";
     private static final String LCD_UID = "od2";
 
-    private final BrickletAmbientLight al;
-    private final BrickletLCD20x4 lcd;
-    private final IPConnection ipcon;
+    private BrickletAmbientLight al;
+    private BrickletLCD20x4 lcd;
+    private IPConnection ipcon;
 
-    public LcdDemo() throws IOException, TinkerforgeException {
+    public LcdDemo() {
+
+    }
+
+    public void setup() throws IOException, TinkerforgeException {
+
         ipcon = new IPConnection();
 
         al = new BrickletAmbientLight(AMBIENT_UID, ipcon);
         lcd = new BrickletLCD20x4(LCD_UID, ipcon);
 
         ipcon.connect(HOST, PORT);
-    }
-
-    public void run() throws TinkerforgeException {
 
         lcd.backlightOn();
         lcd.clearDisplay();
@@ -45,7 +48,7 @@ public class LcdDemo {
         al.setIlluminanceCallbackPeriod(1000);
 
         al.addIlluminanceListener((int rawValue) -> {
-            System.out.println("Got ambient light raw value: " + rawValue);
+            //System.out.println("Got ambient light raw value: " + rawValue);
 
             try {
                 writeToLcd("" + rawValue);
@@ -78,26 +81,22 @@ public class LcdDemo {
 
     public static void main(String[] args) {
 
-        LcdDemo lcdDemo;
+        WaitForQ wfq = new WaitForQ();
+        LcdDemo lcdDemo = new LcdDemo();
 
         try {
-            lcdDemo = new LcdDemo();
+
+            wfq.addShutDownAction(() -> {
+                lcdDemo.shutDown();
+            });
+
+            lcdDemo.setup();            
+            
+            wfq.waitForQ();
+            
         } catch (IOException | TinkerforgeException x) {
             System.out.println("Failed to create system: " + x.getMessage());
-            return;
-        }
-
-        try {
-            lcdDemo.run();
-
-            System.out.println("Press key to exit");
-            System.in.read();
-
-        } catch (IOException | TinkerforgeException tfx) {
-            System.out.println("Error running demo: " + tfx.getMessage());
-        } finally {
-            lcdDemo.shutDown();
-        }
+        } 
     }
 
 }
