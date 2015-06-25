@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ie.philb.tinkersample1;
+package org.rapidpm.demo.iot.tinkerforge.phil;
 
 import com.tinkerforge.BrickletAmbientLight;
 import com.tinkerforge.IPConnection;
@@ -35,12 +35,7 @@ public class Main {
         try {
             al.setIlluminanceCallbackPeriod(1000);
 
-            al.addIlluminanceListener(new BrickletAmbientLight.IlluminanceListener() {
-                @Override
-                public void illuminance(int rawValue) {
-                    System.out.println("Got ambient light raw value: " + rawValue);
-                }
-            });
+            al.addIlluminanceListener(rawValue -> System.out.println("Got ambient light raw value: " + rawValue));
 
         } catch (TinkerforgeException ex) {
             System.err.println("Tinkerforge error : " + ex.getMessage());
