@@ -92,6 +92,7 @@ public class LcdTouchLightDemo {
     }
 
     private void writeToLcd(String msg) throws TinkerforgeException {
+        lcd.clearDisplay();
         lcd.writeLine((short) 0, (short) 0, msg);
     }
 
