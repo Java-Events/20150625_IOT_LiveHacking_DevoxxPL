@@ -7,9 +7,11 @@ package org.rapidpm.demo.iot.tinkerforge.phil;
 
 import com.tinkerforge.BrickletAmbientLight;
 import com.tinkerforge.BrickletLCD20x4;
+import com.tinkerforge.BrickletMultiTouch;
 import com.tinkerforge.IPConnection;
 import com.tinkerforge.TinkerforgeException;
 import java.io.IOException;
+import java.rmi.server.UID;
 import org.rapidpm.demo.iot.tinkerforge.devoxxpl.WaitForQ;
 
 /**
@@ -23,10 +25,12 @@ public class LcdDemo {
     private static final String MASTER_UID = "6e6sro";
     private static final String AMBIENT_UID = "mav";
     private static final String LCD_UID = "od2";
+    private static final String MULTITOUCH_UID = "jU5";
+
+    private IPConnection ipcon;
 
     private BrickletAmbientLight al;
     private BrickletLCD20x4 lcd;
-    private IPConnection ipcon;
 
     public LcdDemo() {
 
@@ -90,13 +94,13 @@ public class LcdDemo {
                 lcdDemo.shutDown();
             });
 
-            lcdDemo.setup();            
-            
+            lcdDemo.setup();
+
             wfq.waitForQ();
-            
+
         } catch (IOException | TinkerforgeException x) {
             System.out.println("Failed to create system: " + x.getMessage());
-        } 
+        }
     }
 
 }
